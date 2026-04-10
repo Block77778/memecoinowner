@@ -5,7 +5,14 @@ import { LuArrowRightFromLine } from "react-icons/lu";
 
 import pkg from "../../../package.json";
 
-export const ToolView: FC = ({
+type ToolViewProps = {
+  setOpenCreateModal: (v: boolean) => void;
+  setOpenTokenMetaData: (v: boolean) => void;
+  setOpenContact: (v: boolean) => void;
+  setOpenAirdrop: (v: boolean) => void;
+  setOpenSendTransaction: (v: boolean) => void;
+};
+export const ToolView: FC<ToolViewProps> = ({
   setOpenTokenMetaData,
   setOpenContact,
   setOpenAirdrop,
