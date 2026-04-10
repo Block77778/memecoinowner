@@ -1,5 +1,11 @@
 import { FC } from "react";
 
+type BrandingProps = {
+  image: string;
+  title: string;
+  message: string;
+};
+
 const Branding: FC = ({ image, title, message }) => {
   return (
     <div className="ps-4 hidden py-4 lg:block">
