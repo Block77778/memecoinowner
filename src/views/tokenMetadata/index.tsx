@@ -9,7 +9,8 @@ import { notify } from "../../utils/notifications";
 import { InputView } from "../index";
 import Branding from "../../components/Branding";
 
-export const ToeknMetadata: FC = ({ setOpenTokenMetaData }) => {
+type TokenMetadataProps = { setOpenTokenMetaData: (v: boolean) => void };
+export const ToeknMetadata: FC<TokenMetadataProps> = ({ setOpenTokenMetaData }) => {
   const { connection } = useConnection();
   const [tokenAddress, setTokenAddress] = useState("");
   const [tokenMetadata, setTokenMetadata] = useState(null);
