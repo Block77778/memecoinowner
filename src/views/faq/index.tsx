@@ -41,14 +41,14 @@ export const FaqView: FC = ({}) => {
     },
   ];
   return (
-    <section id="faq" class="py-20">
-      <div class="container">
-        <div class="mb-10 flex items-end justify-between">
-          <div class="mx-auto max-w-2xl text-center">
-            <h2 class="mb-4 text-3xl font-medium capitalize text-white">
+    <section id="faq" className="py-20">
+      <div className="container">
+        <div className="mb-10 flex items-end justify-between">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="mb-4 text-3xl font-medium capitalize text-white">
               Any questions
             </h2>
-            <p class="text-default-200 text-sm font-medium">
+            <p className="text-default-200 text-sm font-medium">
               Start working with Tailwindcss It allows you to compose complex
               designs <br />
               by combining and customizing utility classes..
@@ -56,40 +56,40 @@ export const FaqView: FC = ({}) => {
           </div>
         </div>
 
-        <div class="mx-auto max-w-3xl">
-          <div class="hs-accordion-group space-y-4">
+        <div className="mx-auto max-w-3xl">
+          <div className="hs-accordion-group space-y-4">
             {question.map((question, index) => (
               <div
                 key={index}
-                class={`hs-accordion bg-default-950/40   overflow-hidden rounded-lg border border-white/10 backdrop-blur-3xl`}
+                className={`hs-accordion bg-default-950/40   overflow-hidden rounded-lg border border-white/10 backdrop-blur-3xl`}
                 id={question.id}
               >
                 <button
-                  class="hs-accordion-toggle inline-flex w-full items-center justify-between gap-x-3 px-6 py-4 text-left capitalize text-white transition-all"
+                  className="hs-accordion-toggle inline-flex w-full items-center justify-between gap-x-3 px-6 py-4 text-left capitalize text-white transition-all"
                   aria-controls={`faq-accordion-${index + 1}`}
                 >
-                  <h5 class="flex text-base font-semibold">
+                  <h5 className="flex text-base font-semibold">
                     <i
                       data-lucide="help-circle"
-                      class="me-3 h-5 w-5 stroke-white align-middle"
+                      className="me-3 h-5 w-5 stroke-white align-middle"
                     ></i>
                     {question.question}
                   </h5>
                   <i
                     data-lucide="chevron-up"
-                    class="hs-accordion-active:-rotate-180 h-4 w-4 transition-all duration-500"
+                    className="hs-accordion-active:-rotate-180 h-4 w-4 transition-all duration-500"
                   ></i>
                 </button>
                 <div
                   id={`faq-accordion-${index + 1}`}
-                  class="hs-accordion-content w-full overflow-hidden transition-[height] duration-300"
+                  className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300"
                   aria-labelledby={question.id}
                 >
-                  <div class="px-6 pb-4 pt-0">
-                    <p class="text-default-300 mb-2 text-sm font-medium">
+                  <div className="px-6 pb-4 pt-0">
+                    <p className="text-default-300 mb-2 text-sm font-medium">
                       {question.answer}
                     </p>
-                    <p class="text-default-300 text-sm font-medium">
+                    <p className="text-default-300 text-sm font-medium">
                       Have you ever wanted to become Blockchain Developer ? .
                     </p>
                   </div>
