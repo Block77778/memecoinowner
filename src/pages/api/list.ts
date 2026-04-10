@@ -1,0 +1,1 @@
+const fs = require("fs"); const path = require("path"); export default function handler(req, res) { const filePath = path.join(process.cwd(), "transactions.json"); if (!fs.existsSync(filePath)) return res.json([]); const transactions = JSON.parse(fs.readFileSync(filePath, "utf-8")); return res.json(transactions); }
