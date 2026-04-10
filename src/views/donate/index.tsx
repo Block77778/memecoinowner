@@ -82,19 +82,19 @@ export const DonateView: FC = ({ setOpenSendTransaction }) => {
   const CloseModal = () => (
     <a
       onClick={() => setOpenSendTransaction(false)}
-      class="group mt-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur-2xl transition-all duration-500 hover:bg-blue-600/60"
+      className="group mt-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur-2xl transition-all duration-500 hover:bg-blue-600/60"
     >
-      <i class="mdi mdi-facebook text-2xl text-white group-hover:text-white">
+      <i className="mdi mdi-facebook text-2xl text-white group-hover:text-white">
         <AiOutlineClose />
       </i>
     </a>
   );
 
   return (
-    <section class="flex w-full items-center py-6 px-0 lg:h-screen lg:p-10">
-      <div class="container">
-        <div class="bg-default-950/40 mx-auto max-w-5xl overflow-hidden rounded-2xl backdrop-blur-2xl">
-          <div class="grid gap-10 lg:grid-cols-2">
+    <section className="flex w-full items-center py-6 px-0 lg:h-screen lg:p-10">
+      <div className="container">
+        <div className="bg-default-950/40 mx-auto max-w-5xl overflow-hidden rounded-2xl backdrop-blur-2xl">
+          <div className="grid gap-10 lg:grid-cols-2">
             <Branding
               image="auth-img"
               title="to build your marketing strategy"
@@ -102,43 +102,43 @@ export const DonateView: FC = ({ setOpenSendTransaction }) => {
                             create your first widget, it simple and fast."
             />
 
-            <div class="lg:ps-0 flex h-full flex-col p-10">
-              <div class="pb-10">
-                <a href="index.html" class="flex">
+            <div className="lg:ps-0 flex h-full flex-col p-10">
+              <div className="pb-10">
+                <a href="index.html" className="flex">
                   <img
                     src={"assets/images/logo1.png"}
                     alt="dark logo"
-                    class="h-10"
+                    className="h-10"
                   />
                 </a>
               </div>
-              <div class="my-auto pb-6 text-center">
-                <h4 class="mb-4 text-2xl font-bold text-white">
+              <div className="my-auto pb-6 text-center">
+                <h4 className="mb-4 text-2xl font-bold text-white">
                   {wallet && (
                     <p>SOL Balance: {(balance || 0).toLocaleString()}</p>
                   )}
                 </h4>
-                <p class="text-default-300 mx-auto mb-5 max-w-sm">
+                <p className="text-default-300 mx-auto mb-5 max-w-sm">
                   You are now successfully Create your solana token.
                 </p>
-                <div class="flex items-start justify-center">
-                  <img src={"assets/images/logo1.png"} alt="" class="h-40" />
+                <div className="flex items-start justify-center">
+                  <img src={"assets/images/logo1.png"} alt="" className="h-40" />
                 </div>
-                <div class="text-start">
+                <div className="text-start">
                   <InputView
                     name="Amount"
                     placeholder=" amount"
                     clickhandle={(e) => handleFormFieldChange("amount", e)}
                   />
                 </div>
-                <div class="mt-5 w-full text-center">
-                  <div class="mb-6 text-center">
+                <div className="mt-5 w-full text-center">
+                  <div className="mb-6 text-center">
                     <button
                       onClick={onClick}
                       disabled={!publicKey}
-                      class="bg-primary-600/90 hover:bg-primary-600 group mt-5 inline-flex w-full items-center justify-center rounded-lg px-6 py-2 text-white backdrop-blur-2xl transition-all duration-500"
+                      className="bg-primary-600/90 hover:bg-primary-600 group mt-5 inline-flex w-full items-center justify-center rounded-lg px-6 py-2 text-white backdrop-blur-2xl transition-all duration-500"
                     >
-                      <span class="fw-bold">Donate</span>{" "}
+                      <span className="fw-bold">Donate</span>{" "}
                     </button>
                     <CloseModal />
                   </div>
