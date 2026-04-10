@@ -12,7 +12,7 @@ require("../styles/globals.css");
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   return (
-    <div class="bg-default-900">
+    <div className="bg-default-900">
       <Head>
         <title>Solana Token Creator</title>
       </Head>
