@@ -6,7 +6,7 @@ type BrandingProps = {
   message: string;
 };
 
-const Branding: FC = ({ image, title, message }) => {
+const Branding: FC<BrandingProps> = ({ image, title, message }) => {
   return (
     <div className="ps-4 hidden py-4 lg:block">
       <div className="relative h-full w-full overflow-hidden rounded-xl">
@@ -22,7 +22,9 @@ const Branding: FC = ({ image, title, message }) => {
                 Solana Token Creator, <br />
                 {title}!
               </h5>
-              <p className="text-default-400 text-base font-medium">{message}</p>
+              <p className="text-default-400 text-base font-medium">
+                {message}
+              </p>
             </div>
           </div>
         </div>
