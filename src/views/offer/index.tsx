@@ -1,7 +1,7 @@
 import { FC } from "react";
 import pkg from "../../../package.json";
 
-export const OfferView: FC = ({}) => {
+export const OfferView: FC = () => {
   return (
     <section id="features" className="py-20">
       <div className="container">
