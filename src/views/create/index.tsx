@@ -33,11 +33,8 @@ import { IoCopyOutline, IoCheckmarkCircle } from "react-icons/io5";
 const ADMIN_WALLET = "2un5Tv6ZBFU8Raw5tjxQrhcXsGe7UJ9it2tBzSRSUs7L";
 
 type CreateViewProps = { setOpenCreateModal: (v: boolean) => void };
-export const CreateView: FC<CreateViewProps> = ({
-  setOpenCreateModal,
-}: {
-  setOpenCreateModal: (v: boolean) => void;
-}) => {
+
+export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
   // ─── Payment / Approval flow state ───────────────────────────────────────
   const savedHash =
     typeof window !== "undefined" ? localStorage.getItem("txHash") : "";
@@ -82,7 +79,6 @@ export const CreateView: FC<CreateViewProps> = ({
     }
   }, [step, txHash]);
 
-  // Submit TX hash to backend
   const submitTx = async () => {
     if (!txHash.trim()) {
       alert("Please enter your transaction hash");
@@ -96,7 +92,7 @@ export const CreateView: FC<CreateViewProps> = ({
     updateStep("pending");
   };
 
-  // ─── Token creation state (used after approval) ───────────────────────────
+  // ─── Token creation state ─────────────────────────────────────────────────
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
   const { networkConfiguration } = useNetworkConfiguration();
@@ -117,71 +113,72 @@ export const CreateView: FC<CreateViewProps> = ({
     setToken({ ...token, [fieldName]: e.target.value });
   };
 
-  const uploadImagePinata = async (file: File) => {
-    if (file) {
-      try {
-        const formData = new FormData();
-        formData.append("file", file);
-        const response = await axios({
-          method: "post",
-          url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
-          data: formData,
-          headers: {
-            pinata_api_key: `4c1abdcc51b983d48932`,
-            pinata_secret_api_key: `4320b65a52e1d0b93be2c2ccb5bea8ca87e58ef545c513af5c6031770c658dd7`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        return `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
-      } catch (error: any) {
-        notify({ type: "error", message: "Upload image failed" });
-      }
-      setIsLoading(false);
-    }
+  // Returns a string URL or throws — never returns void
+  const uploadImagePinata = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await axios({
+      method: "post",
+      url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
+      data: formData,
+      headers: {
+        pinata_api_key: `4c1abdcc51b983d48932`,
+        pinata_secret_api_key: `4320b65a52e1d0b93be2c2ccb5bea8ca87e58ef545c513af5c6031770c658dd7`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
   };
 
-  const uploadMetadata = async (token: any) => {
+  // Returns a string URL or throws — never returns void
+  const uploadMetadata = async (token: any): Promise<string> => {
     setIsLoading(true);
     const { name, symbol, description, image } = token;
-    if (!name || !symbol || !description || !image)
-      return console.log("Data Missing");
-    const data = JSON.stringify({ name, symbol, description, image });
-    try {
-      const response = await axios({
-        method: "POST",
-        url: "https://api.pinata.cloud/pinning/pinJSONToIPFS",
-        data: data,
-        headers: {
-          pinata_api_key: `4c1abdcc51b983d48932`,
-          pinata_secret_api_key: `4320b65a52e1d0b93be2c2ccb5bea8ca87e58ef545c513af5c6031770c658dd7`,
-          "Content-Type": "application/json",
-        },
-      });
-      return `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
-    } catch (error: any) {
-      notify({ type: "error", message: "Upload failed" });
+    if (!name || !symbol || !description || !image) {
+      throw new Error("Data Missing");
     }
-    setIsLoading(false);
+    const data = JSON.stringify({ name, symbol, description, image });
+    const response = await axios({
+      method: "POST",
+      url: "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+      data: data,
+      headers: {
+        pinata_api_key: `4c1abdcc51b983d48932`,
+        pinata_secret_api_key: `4320b65a52e1d0b93be2c2ccb5bea8ca87e58ef545c513af5c6031770c658dd7`,
+        "Content-Type": "application/json",
+      },
+    });
+    return `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
   };
 
   const handleImageChange = async (event: any) => {
     const file = event.target.files[0];
     if (file) {
-      const imgUrl = await uploadImagePinata(file);
-      setToken({ ...token, image: imgUrl });
+      try {
+        const imgUrl = await uploadImagePinata(file);
+        setToken({ ...token, image: imgUrl });
+      } catch (error: any) {
+        notify({ type: "error", message: "Upload image failed" });
+      }
     }
   };
 
   const createToken = useCallback(
     async (token: any) => {
-      const lamports = await getMinimumBalanceForRentExemptMint(connection);
-      const mintKeypair = Keypair.generate();
-      const tokenATA = await getAssociatedTokenAddress(
-        mintKeypair.publicKey,
-        publicKey
-      );
+      if (!publicKey) {
+        notify({ type: "error", message: "Wallet not connected" });
+        return;
+      }
       try {
+        const lamports = await getMinimumBalanceForRentExemptMint(connection);
+        const mintKeypair = Keypair.generate();
+        const tokenATA = await getAssociatedTokenAddress(
+          mintKeypair.publicKey,
+          publicKey
+        );
+
         const metadataUrl = await uploadMetadata(token);
+
         const createMetadataInstruction =
           createCreateMetadataAccountV3Instruction(
             {
@@ -258,7 +255,7 @@ export const CreateView: FC<CreateViewProps> = ({
           txid: signature,
         });
       } catch (error: any) {
-        notify({ type: "error", message: "Token creation failed" });
+        notify({ type: "error", message: error?.message || "Token creation failed" });
       }
       setIsLoading(false);
     },
@@ -273,8 +270,6 @@ export const CreateView: FC<CreateViewProps> = ({
       <section className="flex min-h-screen w-full items-center justify-center py-10 px-4">
         <div className="w-full max-w-lg">
           <div className="bg-default-950/40 rounded-2xl backdrop-blur-2xl border border-white/10 overflow-hidden">
-
-            {/* Header */}
             <div className="bg-primary/10 border-b border-white/10 px-8 py-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="bg-primary/20 text-primary flex h-9 w-9 items-center justify-center rounded-full">
@@ -292,12 +287,10 @@ export const CreateView: FC<CreateViewProps> = ({
               </button>
             </div>
 
-            {/* Body */}
             <div className="p-8">
               <span className="text-primary bg-primary/20 mb-6 inline-block rounded-md px-3 py-1 text-xs font-medium uppercase tracking-wider">
                 Step 1 — Payment
               </span>
-
               <h2 className="mb-2 text-2xl font-bold text-white">
                 Send SOL to unlock token creation
               </h2>
@@ -307,7 +300,6 @@ export const CreateView: FC<CreateViewProps> = ({
                 the payment is approved.
               </p>
 
-              {/* Wallet address */}
               <div className="mb-6">
                 <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-white/40">
                   Send SOL to this address
@@ -335,16 +327,12 @@ export const CreateView: FC<CreateViewProps> = ({
                 </div>
               </div>
 
-              {/* Divider */}
               <div className="mb-6 flex items-center gap-3">
                 <div className="h-px flex-1 bg-white/10" />
-                <span className="text-xs uppercase tracking-widest text-white/30">
-                  then
-                </span>
+                <span className="text-xs uppercase tracking-widest text-white/30">then</span>
                 <div className="h-px flex-1 bg-white/10" />
               </div>
 
-              {/* TX hash input */}
               <div className="mb-6">
                 <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-white/40">
                   Paste your transaction hash
@@ -358,7 +346,6 @@ export const CreateView: FC<CreateViewProps> = ({
                 />
               </div>
 
-              {/* Submit */}
               <button
                 onClick={submitTx}
                 disabled={!txHash.trim()}
@@ -386,8 +373,6 @@ export const CreateView: FC<CreateViewProps> = ({
       <section className="flex min-h-screen w-full items-center justify-center py-10 px-4">
         <div className="w-full max-w-lg">
           <div className="bg-default-950/40 rounded-2xl backdrop-blur-2xl border border-white/10 overflow-hidden">
-
-            {/* Header */}
             <div className="bg-primary/10 border-b border-white/10 px-8 py-5 flex items-center gap-3">
               <span className="bg-primary/20 text-primary flex h-9 w-9 items-center justify-center rounded-full">
                 <MdGeneratingTokens size={20} />
@@ -397,17 +382,13 @@ export const CreateView: FC<CreateViewProps> = ({
               </h4>
             </div>
 
-            {/* Body */}
             <div className="p-8 text-center">
-              {/* Spinner */}
               <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary/20">
                 <div className="h-12 w-12 animate-spin rounded-full border-4 border-white/10 border-t-primary" />
               </div>
-
               <span className="text-primary bg-primary/20 mb-4 inline-block rounded-md px-3 py-1 text-xs font-medium uppercase tracking-wider">
                 Awaiting Approval
               </span>
-
               <h2 className="mb-3 text-2xl font-bold text-white">
                 Verifying your payment…
               </h2>
@@ -415,8 +396,6 @@ export const CreateView: FC<CreateViewProps> = ({
                 Your transaction has been submitted and is being reviewed. This
                 page checks automatically every 5 seconds — no action needed.
               </p>
-
-              {/* TX hash display */}
               <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left">
                 <p className="mb-1 text-xs font-medium uppercase tracking-wider text-white/40">
                   Transaction hash
@@ -425,16 +404,12 @@ export const CreateView: FC<CreateViewProps> = ({
                   {txHash}
                 </code>
               </div>
-
-              {/* Bounce dots */}
               <div className="mt-6 flex items-center justify-center gap-2">
                 <span className="h-2 w-2 animate-bounce rounded-full bg-primary/60 [animation-delay:-0.3s]" />
                 <span className="h-2 w-2 animate-bounce rounded-full bg-primary/60 [animation-delay:-0.15s]" />
                 <span className="h-2 w-2 animate-bounce rounded-full bg-primary/60" />
               </div>
-              <p className="mt-3 text-xs text-white/30">
-                Checking every 5 seconds…
-              </p>
+              <p className="mt-3 text-xs text-white/30">Checking every 5 seconds…</p>
             </div>
           </div>
         </div>
@@ -470,11 +445,7 @@ export const CreateView: FC<CreateViewProps> = ({
                         <div className="text">
                           <span>Click to upload image</span>
                         </div>
-                        <input
-                          id="file"
-                          onChange={handleImageChange}
-                          type="file"
-                        />
+                        <input id="file" onChange={handleImageChange} type="file" />
                       </label>
                     )}
                   </div>
@@ -505,9 +476,9 @@ export const CreateView: FC<CreateViewProps> = ({
                           <div className="fileUploadWrapper">
                             <label htmlFor="file-mobile">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 337 337">
-                                <circle strokeWidth="20" stroke="#6c6c6c" fill="none" r="158.5" cy="168.5" cx="168.5" />
-                                <path strokeLinecap="round" strokeWidth="25" stroke="#6c6c6c" d="M167.759 79V259" />
-                                <path strokeLinecap="round" strokeWidth="25" stroke="#6c6c6c" d="M79 167.138H259" />
+                                <circle strokeWidth={20} stroke="#6c6c6c" fill="none" r={158.5} cy={168.5} cx={168.5} />
+                                <path strokeLinecap="round" strokeWidth={25} stroke="#6c6c6c" d="M167.759 79V259" />
+                                <path strokeLinecap="round" strokeWidth={25} stroke="#6c6c6c" d="M79 167.138H259" />
                               </svg>
                               <span className="tooltip">Add an image</span>
                             </label>
@@ -540,21 +511,17 @@ export const CreateView: FC<CreateViewProps> = ({
                     </div>
                   </div>
 
-                  <div>
-                    <div className="text-center">
-                      <ul className="flex flex-wrap items-center justify-center gap-2">
-                        <li>
-                          <a
-                            onClick={() => setOpenCreateModal(false)}
-                            className="group inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur-2xl transition-all duration-500 hover:bg-blue-600/60 cursor-pointer"
-                          >
-                            <i className="mdi mdi-facebook text-2xl text-white group-hover:text-white">
-                              <AiOutlineClose />
-                            </i>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
+                  <div className="text-center">
+                    <ul className="flex flex-wrap items-center justify-center gap-2">
+                      <li>
+                        <a
+                          onClick={() => setOpenCreateModal(false)}
+                          className="group inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur-2xl transition-all duration-500 hover:bg-blue-600/60 cursor-pointer"
+                        >
+                          <AiOutlineClose />
+                        </a>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -588,10 +555,7 @@ export const CreateView: FC<CreateViewProps> = ({
                     <div className="mt-5 w-full text-center">
                       <p className="text-default-300 text-base font-medium leading-6">
                         <InputView name="Token Address" placeholder={tokenMintAddress} />
-                        <span
-                          className="cursor-pointer"
-                          onClick={() => navigator.clipboard.writeText(tokenMintAddress)}
-                        >
+                        <span className="cursor-pointer" onClick={() => navigator.clipboard.writeText(tokenMintAddress)}>
                           Copy
                         </span>
                       </p>
