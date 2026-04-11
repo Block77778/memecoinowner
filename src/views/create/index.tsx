@@ -32,7 +32,8 @@ import { IoCopyOutline, IoCheckmarkCircle } from "react-icons/io5";
 
 const ADMIN_WALLET = "2un5Tv6ZBFU8Raw5tjxQrhcXsGe7UJ9it2tBzSRSUs7L";
 
-export const CreateView: FC = ({
+type CreateViewProps = { setOpenCreateModal: (v: boolean) => void };
+export const CreateView: FC<CreateViewProps> = ({
   setOpenCreateModal,
 }: {
   setOpenCreateModal: (v: boolean) => void;
