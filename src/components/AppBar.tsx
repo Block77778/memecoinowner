@@ -1,30 +1,16 @@
-import { FC } from "react";
-import Link from "next/link";
+import { FC, ReactNode } from "react";
 import { LuMenu } from "react-icons/lu";
 import NetworkSwitcher from "./NetworkSwitcher";
 
-export const AppBar: FC = (props) => {
+type AppBarProps = { children?: ReactNode };
+
+export const AppBar: FC<AppBarProps> = (props) => {
   const menu = [
-    {
-      name: "Home",
-      link: "#home",
-    },
-    {
-      name: "Tools",
-      link: "#tools",
-    },
-    {
-      name: "Features",
-      link: "#features",
-    },
-    {
-      name: "Price",
-      link: "#price",
-    },
-    {
-      name: "Faq",
-      link: "#faq",
-    },
+    { name: "Home", link: "#home" },
+    { name: "Tools", link: "#tools" },
+    { name: "Features", link: "#features" },
+    { name: "Price", link: "#price" },
+    { name: "Faq", link: "#faq" },
   ];
 
   return (
@@ -48,7 +34,7 @@ export const AppBar: FC = (props) => {
                 data-hs-collapse="#mobileMenu"
                 data-hs-type="collapse"
               >
-                <i data-lucide="menu" className=" stroke-white">
+                <i data-lucide="menu" className="stroke-white">
                   <LuMenu />
                 </i>
               </button>
