@@ -4,19 +4,17 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { notify } from "../../utils/notifications";
 import { AiOutlineClose } from "react-icons/ai";
 import {
-  Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
   SystemProgram,
   Transaction,
   TransactionSignature,
 } from "@solana/web3.js";
-
-//INTERNAL IMPORT
 import { InputView } from "../index";
 import Branding from "../../components/Branding";
 
 type DonateViewProps = { setOpenSendTransaction: (v: boolean) => void };
+
 export const DonateView: FC<DonateViewProps> = ({ setOpenSendTransaction }) => {
   const wallet = useWallet();
   const { connection } = useConnection();
@@ -28,13 +26,12 @@ export const DonateView: FC<DonateViewProps> = ({ setOpenSendTransaction }) => {
 
   useEffect(() => {
     if (wallet.publicKey) {
-      console.log(wallet.publicKey.toBase58());
       getUserSOLBalance(wallet.publicKey, connection);
     }
   }, [wallet.publicKey, connection, getUserSOLBalance]);
 
   const solInputValidation = async (e: any) => {
-    const monstrosity = /((^\.(\d+)?$)|(^\d+(\.\d*)?$)|(^$))/;
+    const monstrosity = /((^\\.(\d+)?$)|(^\d+(\.\d*)?$)|(^$))/;
     const res = new RegExp(monstrosity).exec(e.target.value);
     res && setAmount(e.target.value);
   };
@@ -42,7 +39,6 @@ export const DonateView: FC<DonateViewProps> = ({ setOpenSendTransaction }) => {
   const onClick = useCallback(async () => {
     if (!publicKey) {
       notify({ type: "error", message: `Wallet not connected!` });
-      console.log("error", `Send Transaction: Wallet not connected!`);
       return;
     }
 
@@ -74,16 +70,14 @@ export const DonateView: FC<DonateViewProps> = ({ setOpenSendTransaction }) => {
         description: error?.message,
         txid: signature,
       });
-      console.log("error", `Transaction failed! ${error?.message}`, signature);
       return;
     }
   }, [publicKey, amount, sendTransaction, connection]);
 
-  //COMPONENT
   const CloseModal = () => (
     <a
       onClick={() => setOpenSendTransaction(false)}
-      className="group mt-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur-2xl transition-all duration-500 hover:bg-blue-600/60"
+      className="group mt-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur-2xl transition-all duration-500 hover:bg-blue-600/60 cursor-pointer"
     >
       <i className="mdi mdi-facebook text-2xl text-white group-hover:text-white">
         <AiOutlineClose />
@@ -99,8 +93,7 @@ export const DonateView: FC<DonateViewProps> = ({ setOpenSendTransaction }) => {
             <Branding
               image="auth-img"
               title="to build your marketing strategy"
-              message="Try all paid functions for free. just register and
-                            create your first widget, it simple and fast."
+              message="Try all paid functions for free. Just register and create your first widget, it's simple and fast."
             />
 
             <div className="lg:ps-0 flex h-full flex-col p-10">
@@ -120,7 +113,7 @@ export const DonateView: FC<DonateViewProps> = ({ setOpenSendTransaction }) => {
                   )}
                 </h4>
                 <p className="text-default-300 mx-auto mb-5 max-w-sm">
-                  You are now successfully Create your solana token.
+                  Send SOL to support the creator.
                 </p>
                 <div className="flex items-start justify-center">
                   <img src={"assets/images/logo1.png"} alt="" className="h-40" />
@@ -128,8 +121,8 @@ export const DonateView: FC<DonateViewProps> = ({ setOpenSendTransaction }) => {
                 <div className="text-start">
                   <InputView
                     name="Amount"
-                    placeholder=" amount"
-                    clickhandle={(e) => handleFormFieldChange("amount", e)}
+                    placeholder="amount"
+                    clickhandle={solInputValidation}
                   />
                 </div>
                 <div className="mt-5 w-full text-center">
@@ -139,7 +132,7 @@ export const DonateView: FC<DonateViewProps> = ({ setOpenSendTransaction }) => {
                       disabled={!publicKey}
                       className="bg-primary-600/90 hover:bg-primary-600 group mt-5 inline-flex w-full items-center justify-center rounded-lg px-6 py-2 text-white backdrop-blur-2xl transition-all duration-500"
                     >
-                      <span className="fw-bold">Donate</span>{" "}
+                      <span className="fw-bold">Donate</span>
                     </button>
                     <CloseModal />
                   </div>
