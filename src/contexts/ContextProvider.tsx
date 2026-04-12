@@ -7,11 +7,9 @@ import { WalletModalProvider as ReactUIWalletModalProvider } from "@solana/walle
 import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
-  SolletExtensionWalletAdapter,
-  SolletWalletAdapter,
   TorusWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import { Cluster, clusterApiUrl } from "@solana/web3.js";
+import { clusterApiUrl } from "@solana/web3.js";
 import { FC, ReactNode, useCallback, useMemo } from "react";
 import { AutoConnectProvider, useAutoConnect } from "./AutoConnectProvider";
 import { notify } from "../utils/notifications";
@@ -25,25 +23,19 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { networkConfiguration } = useNetworkConfiguration();
   const network = networkConfiguration as WalletAdapterNetwork;
   const originalEndPoint = useMemo(() => clusterApiUrl(network), [network]);
-  let endpoint;
 
-  if (network == "mainnet-beta") {
+  let endpoint: string;
+  if (network === "mainnet-beta") {
     endpoint =
       "https://solana-mainnet.g.alchemy.com/v2/-nfjwuAkDW1i9XeHdbfWC-_-Hrs3WGQr";
-  } else if (network == "devnet") {
-    endpoint = originalEndPoint;
   } else {
     endpoint = originalEndPoint;
   }
-
-  console.log(network);
 
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter(),
-      new SolletWalletAdapter({ network }),
-      new SolletExtensionWalletAdapter({ network }),
       new TorusWalletAdapter(),
     ],
     [network]
