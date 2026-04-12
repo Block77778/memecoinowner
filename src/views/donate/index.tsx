@@ -33,7 +33,7 @@ export const DonateView: FC<DonateViewProps> = ({ setOpenSendTransaction }) => {
     }
   }, [wallet.publicKey, connection, getUserSOLBalance]);
 
-  const solInputValidation = async (e) => {
+  const solInputValidation = async (e: any) => {
     const monstrosity = /((^\.(\d+)?$)|(^\d+(\.\d*)?$)|(^$))/;
     const res = new RegExp(monstrosity).exec(e.target.value);
     res && setAmount(e.target.value);
