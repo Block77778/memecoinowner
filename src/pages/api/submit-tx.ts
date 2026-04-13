@@ -1,1 +1,26 @@
-const fs = require("fs"); const path = require("path"); export default function handler(req, res) { if (req.method === "POST") { const { txHash } = req.body; if (!txHash) return res.status(400).json({ error: "Missing txHash" }); const filePath = path.join(process.cwd(), "transactions.json"); let transactions = []; if (fs.existsSync(filePath)) { transactions = JSON.parse(fs.readFileSync(filePath, "utf-8")); } const exists = transactions.find((t) => t.txHash === txHash); if (!exists) { transactions.push({ txHash, status: "pending" }); fs.writeFileSync(filePath, JSON.stringify(transactions, null, 2)); } return res.json({ success: true }); } res.status(405).end(); }
+export default async function handler(req: any, res: any) {
+  if (req.method !== "POST") return res.status(405).end();
+
+  const { txHash } = req.body;
+  if (!txHash) return res.status(400).json({ error: "Missing txHash" });
+
+  const url = process.env.UPSTASH_REDIS_REST_URL!;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
+
+  // Only add if not already present
+  const getRes = await fetch(`${url}/get/tx:${txHash}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const existing = await getRes.json();
+  if (!existing.result) {
+    await fetch(`${url}/set/tx:${txHash}/pending`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    // Also push to list so /api/list can find all hashes
+    await fetch(`${url}/lpush/txlist/${txHash}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
+
+  return res.json({ success: true });
+}
