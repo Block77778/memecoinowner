@@ -1,42 +1,41 @@
 import { FC } from "react";
-import pkg from "../../../package.json";
 
 export const FaqView: FC = () => {
   const question = [
     {
-      question: " Who are produces sit pleasure?",
+      question: "What is MemecoinOwner?",
       answer:
-        " Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.",
+        "MemecoinOwner is a no-code platform for creating and managing Solana tokens. Whether you're launching a memecoin or a utility token, our tools let you deploy to the Solana blockchain in minutes — no programming knowledge needed.",
       id: "faq-1",
     },
     {
-      question: " What is quo voluptas nulla pariatur?",
+      question: "Do I need to know how to code to use MemecoinOwner?",
       answer:
-        "Vivamus elementum semper nisi. Aenean vulputate eleifendtellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet.",
+        "Not at all. MemecoinOwner is built specifically for non-developers. Simply connect your Solana wallet, fill in your token details, and we handle all the on-chain transactions for you.",
       id: "faq-2",
     },
     {
-      question: "How to do transactions using iMbank?",
+      question: "Which wallets are supported?",
       answer:
-        " Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.",
+        "We support all major Solana wallets including Phantom, Solflare, Backpack, and Ledger hardware wallets. Simply click 'Select Wallet' to connect and get started.",
       id: "faq-3",
     },
     {
-      question: " hot to activate iMbank service?",
+      question: "Can I update my token's metadata after it's created?",
       answer:
-        "Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.",
+        "Yes. Our Token Metadata tool lets you update your token's name, symbol, description, image, and URI on-chain at any time — as long as you have the mint authority.",
       id: "faq-4",
     },
     {
-      question: "  Who is eligible to open iMbank account?",
+      question: "Is there a fee to create a token?",
       answer:
-        "Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.",
+        "Creating a token requires a small amount of SOL to cover Solana network (gas) fees. There is no additional platform fee charged by MemecoinOwner beyond what the Solana network requires.",
       id: "faq-5",
     },
     {
-      question: "wil i be given a passbook?",
+      question: "What is the Airdrop feature for?",
       answer:
-        "Aenean commodo ligula eget dolor. Aenean massa. Cum sociisnatoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.",
+        "The Airdrop tool lets you claim free SOL on Solana's devnet so you can test token creation and transactions risk-free before going live on mainnet.",
       id: "faq-6",
     },
   ];
@@ -46,12 +45,11 @@ export const FaqView: FC = () => {
         <div className="mb-10 flex items-end justify-between">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="mb-4 text-3xl font-medium capitalize text-white">
-              Any questions
+              Frequently Asked Questions
             </h2>
             <p className="text-default-200 text-sm font-medium">
-              Start working with Tailwindcss It allows you to compose complex
-              designs <br />
-              by combining and customizing utility classes..
+              Everything you need to know about creating and managing <br />
+              your Solana token on MemecoinOwner.
             </p>
           </div>
         </div>
@@ -88,9 +86,6 @@ export const FaqView: FC = () => {
                   <div className="px-6 pb-4 pt-0">
                     <p className="text-default-300 mb-2 text-sm font-medium">
                       {question.answer}
-                    </p>
-                    <p className="text-default-300 text-sm font-medium">
-                      Have you ever wanted to become Blockchain Developer ? .
                     </p>
                   </div>
                 </div>
