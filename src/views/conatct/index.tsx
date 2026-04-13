@@ -43,9 +43,8 @@ export const ContactView: FC<ContactViewProps> = ({ setOpenContact }) => {
             <div className="grid gap-10 lg:grid-cols-2">
               <Branding
                 image="auth-img"
-                title="to build your marketing strategy"
-                message="Try all paid functions for free. just register and
-                            create your first widget, it simple and fast."
+                title="Get in Touch with Our Team"
+                message="Have a question or need support? Send us a message and we'll get back to you as soon as possible."
               />
 
               <div className="lg:ps-0 flex h-full flex-col p-10">
