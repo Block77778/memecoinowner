@@ -22,7 +22,7 @@ export const AppBar: FC<AppBarProps> = (props) => {
               <img
                 src="assets/images/logo1.png"
                 className="h-10"
-                alt="WebAi Logo"
+                alt="MemecoinOwner Logo"
               />
             </a>
 
