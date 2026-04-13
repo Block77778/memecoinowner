@@ -29,7 +29,7 @@ export const Footer: FC = () => {
               MemecoinOwner
             </h5>
             <p className="text-default-300">
-              MemecoinOwner is your all-in-one platform to launch, manage, and scale memecoins بسهولة. 
+              MemecoinOwner is your all-in-one platform to launch, manage, and scale memecoins. 
               Built for creators who want fast, secure, and powerful crypto tools.
             </p>
           </div>
