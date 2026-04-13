@@ -18,14 +18,14 @@ export const HomeView: FC<HomeViewProps> = ({ setOpenCreateModal }) => {
 
                 <div className="">
                   <span className="text-primary bg-primary/20 rounded-md px-3 py-1 text-sm font-medium uppercase tracking-wider">
-                    CREATE SOLANA TOKEN {pkg.version}
+                    #1 SOLANA TOKEN CREATOR
                   </span>
                   <h1 className="md:text-5xl/tight my-4 max-w-lg text-4xl font-medium text-white">
-                    Now create Solana Token to without code.
+                    Launch Your Solana Memecoin — No Code Required.
                   </h1>
                   <p className="text-default-300 md:text-lg">
-                    Launch you Solana Token, All in one solana <br />
-                    token development and deployment.
+                    Create, deploy, and manage your Solana token in minutes. <br />
+                    The all-in-one platform for memecoin creators.
                   </p>
 
                   <div className="new_add_css">
