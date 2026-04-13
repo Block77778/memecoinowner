@@ -535,8 +535,8 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
               <div className="grid gap-10 lg:grid-cols-2">
                 <Branding
                   image="auth-img"
-                  title="to build your marketing strategy"
-                  message="Try all paid functions for free. Just register and create your first widget, it's simple and fast."
+                  title="Launch Your Token on Solana"
+                  message="Create and manage your Solana token in minutes — no code required. Visit memecoinowner.com to get started."
                 />
                 <div className="lg:ps-0 flex h-full flex-col p-10">
                   <div className="pb-10">
