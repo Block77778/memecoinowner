@@ -24,28 +24,28 @@ export const FeatureView: FC<FeatureViewProps> = ({
       name: "Token Generator",
       icon: <MdGeneratingTokens />,
       description:
-        "Start working with Solana Token Creator, It allows you to create solana token by Creating, deploying, airdrop, transfering and updating metadata.",
+        "Launch your own Solana token in minutes. Set your name, symbol, supply, and decimals — then deploy straight to the Solana blockchain with one click.",
       function: setOpenCreateModal,
     },
     {
       name: "Get Airdrop",
       icon: <MdToken />,
       description:
-        "Start working with Solana Token Creator, It allows you to create solana token by Creating, deploying, airdrop, transfering and updating metadata.",
+        "Claim free devnet SOL instantly to test your tokens and transactions. Perfect for experimenting before going live on mainnet.",
       function: setOpenAirdrop,
     },
     {
       name: "Transfer Sol",
       icon: <RiTokenSwapFill />,
       description:
-        "Start working with Solana Token Creator, It allows you to create solana token by Creating, deploying, airdrop, transfering and updating metadata.",
+        "Send SOL to any wallet address quickly and securely. Track your transactions in real time directly from your dashboard.",
       function: setOpenSendTransaction,
     },
     {
       name: "Metadata Token",
       icon: <RxTokens />,
       description:
-        "Start working with Solana Token Creator, It allows you to create solana token by Creating, deploying, airdrop, transfering and updating metadata.",
+        "Update your token's metadata on-chain — change the name, symbol, URI, or image anytime. Keep your token's identity fresh and professional.",
       function: setOpenTokenMetaData,
     },
   ];
@@ -55,11 +55,11 @@ export const FeatureView: FC<FeatureViewProps> = ({
         <div className="mb-10 flex items-end justify-between">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="mb-4 text-3xl font-medium capitalize text-white">
-              Choose Solana Blockchain generator
+              Everything You Need to Launch on Solana
             </h2>
             <p className="text-default-200 text-sm font-medium">
-              Now you can create Solana Token <br />
-              to without code instantly.
+              MemecoinOwner gives you the tools to create, deploy, and manage <br />
+              your Solana token — all without writing a single line of code.
             </p>
           </div>
         </div>
