@@ -1,1 +1,15 @@
-const fs = require("fs"); const path = require("path"); export default function handler(req, res) { if (req.method === "POST") { const { txHash } = req.body; const filePath = path.join(process.cwd(), "transactions.json"); if (!fs.existsSync(filePath)) return res.status(404).json({ error: "No transactions found" }); const transactions = JSON.parse(fs.readFileSync(filePath, "utf-8")); const tx = transactions.find((t) => t.txHash === txHash); if (!tx) return res.status(404).json({ error: "Transaction not found" }); tx.status = "approved"; fs.writeFileSync(filePath, JSON.stringify(transactions, null, 2)); return res.json({ success: true }); } res.status(405).end(); }
+export default async function handler(req: any, res: any) {
+  if (req.method !== "POST") return res.status(405).end();
+
+  const { txHash } = req.body;
+  if (!txHash) return res.status(400).json({ error: "Missing txHash" });
+
+  const url = process.env.UPSTASH_REDIS_REST_URL!;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
+
+  await fetch(`${url}/set/tx:${txHash}/approved`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return res.json({ success: true });
+}
