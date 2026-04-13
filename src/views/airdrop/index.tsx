@@ -84,9 +84,8 @@ export const AirdropView: FC<AirdropViewProps> = ({ setOpenAirdrop }) => {
           <div className="grid gap-10 lg:grid-cols-2">
             <Branding
               image="auth-img"
-              title="to build your marketing strategy"
-              message="Try all paid functions for free. just register and
-                            create your first widget, it simple and fast."
+              title="Launch Your Token on Solana"
+              message="Claim free devnet SOL to test your token creation and transactions risk-free before going live on mainnet."
             />
 
             <div className="lg:ps-0 flex h-full flex-col p-10">
