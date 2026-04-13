@@ -9,7 +9,6 @@ export const AppBar: FC<AppBarProps> = (props) => {
     { name: "Home", link: "#home" },
     { name: "Tools", link: "#tools" },
     { name: "Features", link: "#features" },
-    { name: "Price", link: "#price" },
     { name: "Faq", link: "#faq" },
   ];
 
