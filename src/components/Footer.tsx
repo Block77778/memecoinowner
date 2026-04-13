@@ -149,7 +149,7 @@ export const Footer: FC = () => {
                 data-lucide="heart"
                 className="inline h-4 w-4 fill-red-500 text-red-500"
               ></i>
-              by @theblockchaincoders
+              by @Crypto Taq
             </a>
           </p>
           <p className="text-default-400 text-base font-medium">
