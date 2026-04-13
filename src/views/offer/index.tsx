@@ -1,5 +1,4 @@
 import { FC } from "react";
-import pkg from "../../../package.json";
 
 export const OfferView: FC = () => {
   return (
@@ -8,12 +7,11 @@ export const OfferView: FC = () => {
         <div className="mb-10 flex items-end justify-between">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="mb-4 text-3xl font-medium capitalize text-white">
-              Solana token popularity
+              Why Creators Choose MemecoinOwner
             </h2>
             <p className="text-default-200 text-sm font-medium">
-              tart working with Solana Token Creator, It allows you to create
-              solana token by Creating, deploying, airdrop, transfering and
-              updating metadata.
+              Built for speed, security, and simplicity — everything you need to
+              go from idea to launched token in minutes.
             </p>
           </div>
         </div>
@@ -24,18 +22,18 @@ export const OfferView: FC = () => {
               <div className="p-10">
                 <i data-lucide="file-text" className="text-primary h-10 w-10"></i>
                 <h3 className="mb-4 mt-8 text-2xl font-medium text-white">
-                  Best Token Builder
+                  Instant Token Launch
                 </h3>
                 <p className="text-default-100 mb-4 text-sm font-medium">
-                  AI can create informative articles or blog posts on a wide
-                  range of topics.
+                  Deploy your Solana token to mainnet or devnet in under 60 seconds.
+                  No development experience required — just fill in your token details and go.
                 </p>
                 <a
                   href="#"
                   className="text-primary group relative inline-flex items-center gap-2"
                 >
                   <span className="bg-primary/80 absolute -bottom-0 h-px w-7/12 rounded transition-all duration-500 group-hover:w-full"></span>
-                  Read More <i data-lucide="move-right" className="h-4 w-4"></i>
+                  Learn More <i data-lucide="move-right" className="h-4 w-4"></i>
                 </a>
               </div>
             </div>
@@ -43,18 +41,18 @@ export const OfferView: FC = () => {
               <div className="p-10">
                 <i data-lucide="pen" className="text-primary h-10 w-10"></i>
                 <h3 className="mb-4 mt-8 text-2xl font-medium text-white">
-                  Updated Metadata
+                  Editable On-Chain Metadata
                 </h3>
                 <p className="text-default-100 mb-4 text-sm font-medium">
-                  Ai can generate short stories, poetry, or other creative
-                  pieces.
+                  Update your token's name, symbol, image, and URI at any time.
+                  Keep your project's identity current as your community grows.
                 </p>
                 <a
                   href="#"
                   className="text-primary group relative inline-flex items-center gap-2"
                 >
                   <span className="bg-primary/80 absolute -bottom-0 h-px w-7/12 rounded transition-all duration-500 group-hover:w-full"></span>
-                  Read More <i data-lucide="move-right" className="h-4 w-4"></i>
+                  Learn More <i data-lucide="move-right" className="h-4 w-4"></i>
                 </a>
               </div>
             </div>
@@ -65,18 +63,18 @@ export const OfferView: FC = () => {
               <div className="p-10">
                 <i data-lucide="database" className="text-primary h-10 w-10"></i>
                 <h3 className="mb-4 mt-8 text-2xl font-medium text-white">
-                  Data Analysis and Solana
+                  Real-Time Transaction Tracking
                 </h3>
                 <p className="text-default-100 mb-4 text-sm font-medium">
-                  AI can analyze data and generate reports with insights and
-                  Financial Reports.
+                  Monitor every transaction as it happens. Full on-chain visibility
+                  with direct links to Solana Explorer for every action you take.
                 </p>
                 <a
                   href="#"
                   className="text-primary group relative inline-flex items-center gap-2"
                 >
                   <span className="bg-primary/80 absolute -bottom-0 h-px w-7/12 rounded transition-all duration-500 group-hover:w-full"></span>
-                  Read More <i data-lucide="move-right" className="h-4 w-4"></i>
+                  Learn More <i data-lucide="move-right" className="h-4 w-4"></i>
                 </a>
               </div>
             </div>
@@ -84,18 +82,18 @@ export const OfferView: FC = () => {
               <div className="p-10">
                 <i data-lucide="gitlab" className="text-primary h-10 w-10"></i>
                 <h3 className="mb-4 mt-8 text-2xl font-medium text-white">
-                  Code and Programming Solana
+                  Airdrop & Distribution Tools
                 </h3>
                 <p className="text-default-100 mb-4 text-sm font-medium">
-                  Code Snippets: AI can generate code snippets in various
-                  programming languages.
+                  Distribute tokens to your community effortlessly. Use our airdrop
+                  tools to send tokens to multiple wallets in a single operation.
                 </p>
                 <a
                   href="#"
                   className="text-primary group relative inline-flex items-center gap-2"
                 >
                   <span className="bg-primary/80 absolute -bottom-0 h-px w-7/12 rounded transition-all duration-500 group-hover:w-full"></span>
-                  Read More <i data-lucide="move-right" className="h-4 w-4"></i>
+                  Learn More <i data-lucide="move-right" className="h-4 w-4"></i>
                 </a>
               </div>
             </div>
@@ -106,18 +104,18 @@ export const OfferView: FC = () => {
               <div className="p-10">
                 <i data-lucide="palette" className="text-primary h-10 w-10"></i>
                 <h3 className="mb-4 mt-8 text-2xl font-medium text-white">
-                  Zero Code Solana
+                  Zero Code Required
                 </h3>
                 <p className="text-default-100 mb-4 text-sm font-medium">
-                  Graphic Design: AI can generate images, logos, and other
-                  visual content
+                  No Rust, no Solana CLI, no complexity. MemecoinOwner handles
+                  all the blockchain interaction so you can focus on building your brand.
                 </p>
                 <a
                   href="#"
                   className="text-primary group relative inline-flex items-center gap-2"
                 >
                   <span className="bg-primary/80 absolute -bottom-0 h-px w-7/12 rounded transition-all duration-500 group-hover:w-full"></span>
-                  Read More <i data-lucide="move-right" className="h-4 w-4"></i>
+                  Learn More <i data-lucide="move-right" className="h-4 w-4"></i>
                 </a>
               </div>
             </div>
@@ -128,18 +126,18 @@ export const OfferView: FC = () => {
                   className="text-primary h-10 w-10"
                 ></i>
                 <h3 className="mb-4 mt-8 text-2xl font-medium text-white">
-                  Solana Tools
+                  Multi-Wallet Support
                 </h3>
                 <p className="text-default-100 mb-4 text-sm font-medium">
-                  AI can trandefault text from one language to another and Ai
-                  can any language your choice.
+                  Connect with Phantom, Solflare, Backpack, and all major Solana
+                  wallets. Seamlessly switch between wallets and networks.
                 </p>
                 <a
                   href="#"
                   className="text-primary group relative inline-flex items-center gap-2"
                 >
                   <span className="bg-primary/80 absolute -bottom-0 h-px w-7/12 rounded transition-all duration-500 group-hover:w-full"></span>
-                  Read More <i data-lucide="move-right" className="h-4 w-4"></i>
+                  Learn More <i data-lucide="move-right" className="h-4 w-4"></i>
                 </a>
               </div>
             </div>
