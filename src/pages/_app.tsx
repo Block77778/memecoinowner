@@ -14,7 +14,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <div className="bg-default-900">
       <Head>
-        <title>Solana Token Creator</title>
+        <title>MemecoinOwner — Launch Your Solana Token</title>
       </Head>
 
       <ContextProvider>
