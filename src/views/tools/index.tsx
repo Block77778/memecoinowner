@@ -67,13 +67,11 @@ export const ToolView: FC<ToolViewProps> = ({
         <div className="mb-10 flex items-end justify-between">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="mb-4 text-3xl font-medium capitalize text-white">
-              Solana Powerfull Tools
+              Powerful Solana Tools at Your Fingertips
             </h2>
             <p className="text-default-200 text-sm font-medium">
-              Start working with Solana Token Creator, It allows you to create
-              solana token <br />
-              by Creating, deploying, airdrop, transfering and updating
-              metadata.
+              Everything you need to create, manage, and grow your Solana token — <br />
+              all in one place at memecoinowner.com.
             </p>
           </div>
         </div>
