@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback, FC } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import {
   Keypair,
   PublicKey,
   SystemProgram,
   Transaction,
+  LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
 import {
   MINT_SIZE,
@@ -28,74 +30,50 @@ import { InputView } from "../index";
 import CreateSVG from "../../components/SVG/CreateSVG";
 import Branding from "../../components/Branding";
 import { MdGeneratingTokens } from "react-icons/md";
-import { IoCopyOutline, IoCheckmarkCircle } from "react-icons/io5";
+import { IoCheckmarkCircle, IoWalletOutline } from "react-icons/io5";
 
 const ADMIN_WALLET = "2un5Tv6ZBFU8Raw5tjxQrhcXsGe7UJ9it2tBzSRSUs7L";
+const FEE_SOL = 1;
 
 type CreateViewProps = { setOpenCreateModal: (v: boolean) => void };
 
 export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
   // ─── Payment / Approval flow state ───────────────────────────────────────
-  const savedHash =
-    typeof window !== "undefined" ? localStorage.getItem("txHash") : "";
-  const savedStep =
-    typeof window !== "undefined" ? localStorage.getItem("step") : "payment";
-
-  const [step, setStep] = useState<"payment" | "pending" | "approved">(
-    (savedStep as "payment" | "pending" | "approved") || "payment"
-  );
-  const [txHash, setTxHash] = useState(savedHash || "");
-  const [copied, setCopied] = useState(false);
-
-  const updateStep = (s: "payment" | "pending" | "approved") => {
-    setStep(s);
-    localStorage.setItem("step", s);
-  };
-
-  const updateTxHash = (h: string) => {
-    setTxHash(h);
-    localStorage.setItem("txHash", h);
-  };
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(ADMIN_WALLET);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  // Poll backend for approval every 5 seconds
-  useEffect(() => {
-    if (step === "pending") {
-      const interval = setInterval(async () => {
-        const res = await fetch(`/api/status?txHash=${txHash}`);
-        const data = await res.json();
-        if (data.status === "approved") {
-          localStorage.removeItem("step");
-          localStorage.removeItem("txHash");
-          updateStep("approved");
-        }
-      }, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [step, txHash]);
-
-  const submitTx = async () => {
-    if (!txHash.trim()) {
-      alert("Please enter your transaction hash");
-      return;
-    }
-    await fetch("/api/submit-tx", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ txHash }),
-    });
-    updateStep("pending");
-  };
+  const [step, setStep] = useState<"payment" | "paying" | "approved">("payment");
+  const [payError, setPayError] = useState("");
 
   // ─── Token creation state ─────────────────────────────────────────────────
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
   const { networkConfiguration } = useNetworkConfiguration();
+
+  // ─── Direct wallet payment ────────────────────────────────────────────────
+  const handlePayNow = useCallback(async () => {
+    if (!publicKey) {
+      setPayError("Please connect your wallet first.");
+      return;
+    }
+    setPayError("");
+    setStep("paying");
+    try {
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: new PublicKey(ADMIN_WALLET),
+          lamports: LAMPORTS_PER_SOL * FEE_SOL,
+        })
+      );
+      const signature = await sendTransaction(transaction, connection);
+      // Wait for confirmation
+      await connection.confirmTransaction(signature, "confirmed");
+      notify({ type: "success", message: "Payment confirmed!", txid: signature });
+      setStep("approved");
+    } catch (error: any) {
+      notify({ type: "error", message: error?.message || "Payment failed" });
+      setStep("payment");
+      setPayError(error?.message || "Transaction failed. Please try again.");
+    }
+  }, [publicKey, sendTransaction, connection]);
 
   const [tokenMintAddress, setTokenMintAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -265,11 +243,12 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
   // =========================================================================
   // 💰 STEP 1 — PAYMENT SCREEN
   // =========================================================================
-  if (step === "payment") {
+  if (step === "payment" || step === "paying") {
     return (
       <section className="flex min-h-screen w-full items-center justify-center py-10 px-4">
         <div className="w-full max-w-lg">
           <div className="bg-default-950/40 rounded-2xl backdrop-blur-2xl border border-white/10 overflow-hidden">
+            {/* Header */}
             <div className="bg-primary/10 border-b border-white/10 px-8 py-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="bg-primary/20 text-primary flex h-9 w-9 items-center justify-center rounded-full">
@@ -289,127 +268,72 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
 
             <div className="p-8">
               <span className="text-primary bg-primary/20 mb-6 inline-block rounded-md px-3 py-1 text-xs font-medium uppercase tracking-wider">
-                Step 1 — Payment
+                Step 1 — Unlock Token Creator
               </span>
               <h2 className="mb-2 text-2xl font-bold text-white">
-                Send SOL to unlock token creation
+                Send 1 SOL to instantly create your coin
               </h2>
               <p className="text-default-300 mb-8 text-sm leading-relaxed">
-                Transfer SOL to the address below, then paste your transaction
-                hash to verify. Your token creator unlocks automatically once
-                the payment is approved.
+                Transfer 1 SOL to the address below. Your token creator unlocks automatically once the payment is confirmed on-chain — no waiting, no manual approval.
               </p>
 
-              <div className="mb-6">
-                <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-white/40">
-                  Send SOL to this address
-                </label>
-                <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-                  <code className="flex-1 truncate font-mono text-sm text-white/80">
-                    {ADMIN_WALLET}
-                  </code>
-                  <button
-                    onClick={handleCopy}
-                    className="flex shrink-0 items-center gap-1.5 rounded-lg bg-primary/20 px-3 py-1.5 text-xs font-medium text-primary transition-all duration-300 hover:bg-primary/40"
-                  >
-                    {copied ? (
-                      <>
-                        <IoCheckmarkCircle size={14} />
-                        Copied
-                      </>
-                    ) : (
-                      <>
-                        <IoCopyOutline size={14} />
-                        Copy
-                      </>
-                    )}
-                  </button>
+              {/* Fee breakdown */}
+              <div className="mb-6 rounded-xl border border-white/10 bg-white/5 p-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-white/50">Platform fee</span>
+                  <span className="text-white font-medium">{FEE_SOL} SOL</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-white/50">Recipient</span>
+                  <code className="text-white/60 font-mono text-xs truncate max-w-[220px]">{ADMIN_WALLET}</code>
+                </div>
+                <div className="border-t border-white/10 pt-2 flex justify-between text-sm font-semibold">
+                  <span className="text-white">Total</span>
+                  <span className="text-primary">{FEE_SOL} SOL</span>
                 </div>
               </div>
 
-              <div className="mb-6 flex items-center gap-3">
-                <div className="h-px flex-1 bg-white/10" />
-                <span className="text-xs uppercase tracking-widest text-white/30">then</span>
-                <div className="h-px flex-1 bg-white/10" />
-              </div>
+              {/* Wallet connect button */}
+              {!publicKey && (
+                <div className="mb-4 flex flex-col items-center gap-3">
+                  <p className="text-xs text-white/40 uppercase tracking-wider">Connect your wallet to continue</p>
+                  <WalletMultiButton />
+                </div>
+              )}
 
-              <div className="mb-6">
-                <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-white/40">
-                  Paste your transaction hash
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 5KtPnREhb2xYqF..."
-                  value={txHash}
-                  onChange={(e) => updateTxHash(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-mono text-sm text-white/80 placeholder-white/20 outline-none transition-all duration-300 focus:border-primary/50 focus:bg-white/10"
-                />
-              </div>
+              {/* Pay button */}
+              {publicKey && (
+                <div className="mb-4 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 flex items-center gap-2 mb-4">
+                  <IoCheckmarkCircle className="text-green-400 shrink-0" size={16} />
+                  <span className="text-white/70 font-mono text-xs truncate">{publicKey.toBase58()}</span>
+                </div>
+              )}
 
               <button
-                onClick={submitTx}
-                disabled={!txHash.trim()}
+                onClick={handlePayNow}
+                disabled={!publicKey || step === "paying"}
                 className="bg-primary/90 hover:bg-primary inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                <MdGeneratingTokens size={18} />
-                Submit Payment &amp; Continue
+                {step === "paying" ? (
+                  <>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    Confirming payment…
+                  </>
+                ) : (
+                  <>
+                    <IoWalletOutline size={18} />
+                    Pay {FEE_SOL} SOL &amp; Continue
+                  </>
+                )}
               </button>
 
+              {payError && (
+                <p className="mt-3 text-center text-xs text-red-400">{payError}</p>
+              )}
+
               <p className="mt-4 text-center text-xs text-white/30">
-                Your payment will be reviewed by the admin — usually under a minute.
+                Payment is confirmed on-chain instantly — no admin approval needed.
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // =========================================================================
-  // ⏳ STEP 2 — PENDING SCREEN
-  // =========================================================================
-  if (step === "pending") {
-    return (
-      <section className="flex min-h-screen w-full items-center justify-center py-10 px-4">
-        <div className="w-full max-w-lg">
-          <div className="bg-default-950/40 rounded-2xl backdrop-blur-2xl border border-white/10 overflow-hidden">
-            <div className="bg-primary/10 border-b border-white/10 px-8 py-5 flex items-center gap-3">
-              <span className="bg-primary/20 text-primary flex h-9 w-9 items-center justify-center rounded-full">
-                <MdGeneratingTokens size={20} />
-              </span>
-              <h4 className="text-lg font-bold text-white tracking-wide">
-                Create Solana Token
-              </h4>
-            </div>
-
-            <div className="p-8 text-center">
-              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary/20">
-                <div className="h-12 w-12 animate-spin rounded-full border-4 border-white/10 border-t-primary" />
-              </div>
-              <span className="text-primary bg-primary/20 mb-4 inline-block rounded-md px-3 py-1 text-xs font-medium uppercase tracking-wider">
-                Awaiting Approval
-              </span>
-              <h2 className="mb-3 text-2xl font-bold text-white">
-                Verifying your payment…
-              </h2>
-              <p className="text-default-300 mx-auto mb-8 max-w-sm text-sm leading-relaxed">
-                Your transaction has been submitted and is being reviewed. This
-                page checks automatically every 5 seconds — no action needed.
-              </p>
-              <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left">
-                <p className="mb-1 text-xs font-medium uppercase tracking-wider text-white/40">
-                  Transaction hash
-                </p>
-                <code className="block truncate font-mono text-sm text-white/70">
-                  {txHash}
-                </code>
-              </div>
-              <div className="mt-6 flex items-center justify-center gap-2">
-                <span className="h-2 w-2 animate-bounce rounded-full bg-primary/60 [animation-delay:-0.3s]" />
-                <span className="h-2 w-2 animate-bounce rounded-full bg-primary/60 [animation-delay:-0.15s]" />
-                <span className="h-2 w-2 animate-bounce rounded-full bg-primary/60" />
-              </div>
-              <p className="mt-3 text-xs text-white/30">Checking every 5 seconds…</p>
             </div>
           </div>
         </div>
