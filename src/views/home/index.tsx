@@ -24,8 +24,7 @@ export const HomeView: FC<HomeViewProps> = ({ setOpenCreateModal }) => {
                     Launch Your Solana Memecoin — No Code Required.
                   </h1>
                   <p className="text-default-300 md:text-lg">
-                    Create, deploy, and manage your Solana token in minutes. <br />
-                    The all-in-one platform for memecoin creators.
+                    Create, launch and manage for free your own meme coin in minutes.
                   </p>
 
                   <div className="new_add_css">
