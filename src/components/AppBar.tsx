@@ -19,7 +19,7 @@ export const AppBar: FC<AppBarProps> = (props) => {
             <a href="/" className="logo">
               <img
                 src="assets/images/logo1.png"
-                className="h-24"
+                className="h-26"
                 alt="MemecoinOwner Logo"
               />
             </a>
