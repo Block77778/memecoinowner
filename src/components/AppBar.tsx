@@ -7,9 +7,8 @@ type AppBarProps = { children?: ReactNode };
 export const AppBar: FC<AppBarProps> = (props) => {
   const menu = [
     { name: "Home", link: "#home" },
-    { name: "Tools", link: "#tools" },
     { name: "Features", link: "#features" },
-    { name: "Faq", link: "#faq" },
+    { name: "FAQ", link: "#faq" },
   ];
 
   return (
