@@ -1,32 +1,12 @@
 import { FC } from "react";
 import dynamic from "next/dynamic";
-import { useNetworkConfiguration } from "../contexts/NetworkConfigurationProvider";
 
-//INTERNAL IMPORT
-import NetworkSwitcherSVG from "./SVG/NetworkSwitcherSVG";
-
+// Network is locked to mainnet — no switcher shown to users
 const NetworkSwitcher: FC = () => {
-  const { networkConfiguration, setNetworkConfiguration } =
-    useNetworkConfiguration();
-
-  console.log(networkConfiguration);
-
   return (
-    <>
-      <input type="checkbox" id="checkbox" />
-      <label className="switch">
-        <select
-          value={networkConfiguration}
-          onChange={(e) => setNetworkConfiguration(e.target.value || "devnet")}
-          className="select max-w-xs border-none bg-transparent outline-0"
-        >
-          <option value="mainnet-beta">main</option>
-          <option value="devnet">dev</option>
-          <option value="testnet">test</option>
-        </select>
-        <NetworkSwitcherSVG />
-      </label>
-    </>
+    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/60">
+      Mainnet
+    </span>
   );
 };
 
