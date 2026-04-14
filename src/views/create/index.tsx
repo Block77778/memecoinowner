@@ -137,9 +137,33 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
           lamports: LAMPORTS_PER_SOL * FEE_SOL,
         })
       );
-      const feeSig = await sendTransaction(feeTx, connection);
-      await connection.confirmTransaction(feeSig, "confirmed");
-      notify({ type: "success", message: "Payment confirmed! Creating your token…", txid: feeSig });
+
+      // Get a fresh blockhash with longer validity
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash("finalized");
+      feeTx.recentBlockhash = blockhash;
+      feeTx.feePayer = publicKey;
+
+      const feeSig = await sendTransaction(feeTx, connection, {
+        skipPreflight: false,
+        maxRetries: 5,
+      });
+
+      notify({ type: "success", message: "Payment sent! Creating your coin…", txid: feeSig });
+
+      // Confirm with extended timeout (120s)
+      try {
+        await connection.confirmTransaction(
+          { signature: feeSig, blockhash, lastValidBlockHeight },
+          "confirmed"
+        );
+      } catch (confirmErr: any) {
+        // Timeout is common on mainnet — check if tx actually landed
+        const status = await connection.getSignatureStatus(feeSig);
+        if (!status?.value || status.value.err) {
+          throw new Error("Payment transaction failed. Please try again.");
+        }
+        // If status exists with no error, it went through — continue
+      }
 
       // Now create the token
       const lamports = await getMinimumBalanceForRentExemptMint(connection);
@@ -200,7 +224,29 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
         createMetadataInstruction
       );
 
-      const signature = await sendTransaction(createNewTokenTransaction, connection, { signers: [mintKeypair] });
+      // Fresh blockhash for token creation tx
+      const mintBlockhash = await connection.getLatestBlockhash("finalized");
+      createNewTokenTransaction.recentBlockhash = mintBlockhash.blockhash;
+      createNewTokenTransaction.feePayer = publicKey;
+
+      const signature = await sendTransaction(createNewTokenTransaction, connection, {
+        signers: [mintKeypair],
+        skipPreflight: false,
+        maxRetries: 5,
+      });
+
+      try {
+        await connection.confirmTransaction(
+          { signature, blockhash: mintBlockhash.blockhash, lastValidBlockHeight: mintBlockhash.lastValidBlockHeight },
+          "confirmed"
+        );
+      } catch (confirmErr: any) {
+        const status = await connection.getSignatureStatus(signature);
+        if (!status?.value || status.value.err) {
+          throw new Error("Token creation transaction failed. Please try again.");
+        }
+      }
+
       setTokenMintAddress(mintKeypair.publicKey.toString());
       notify({ type: "success", message: "Token creation successful!", txid: signature });
       setStep("done");
