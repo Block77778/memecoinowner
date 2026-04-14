@@ -15,18 +15,20 @@ export const ToolView: FC<ToolViewProps> = ({
   const tools = [
     {
       name: "Create Token",
-      description: "Launch your Solana token in minutes. Set name, symbol, supply, and decimals — then deploy with one click.",
+      description: "Launch your own Solana token in 60 seconds. Choose a name, symbol, supply amount — then create in a single click. Your token will be instantly ready for use.",
       icon: <MdGeneratingTokens size={22} />,
       color: "text-primary",
       bg: "bg-primary/10",
+      cta: "Create Now",
       function: setOpenCreateModal,
     },
     {
-      name: "Update Metadata",
-      description: "Edit your token's name, symbol, image, or URI on-chain anytime you need to refresh your project's identity.",
+      name: "Update Coin",
+      description: "Update your coin with us — such as the name, symbol, and other details as needed, anytime, free.",
       icon: <RxTokens size={22} />,
       color: "text-sky-400",
       bg: "bg-sky-400/10",
+      cta: "Update Now",
       function: setOpenTokenMetaData,
     },
   ];
@@ -36,11 +38,11 @@ export const ToolView: FC<ToolViewProps> = ({
       <div className="container">
         <div className="mb-10 text-center">
           <h2 className="mb-4 text-3xl font-medium capitalize text-white">
-            Simple. Fast. Powerful.
+            Easy. Create or Update your Coin.
           </h2>
           <p className="text-default-200 text-sm font-medium">
-            Two tools. Everything you need to launch and manage your Solana token<br />
-            — no code, no complexity.
+            Create a new coin or update an existing coin.<br />
+            No code, no complexity.
           </p>
         </div>
 
@@ -59,7 +61,7 @@ export const ToolView: FC<ToolViewProps> = ({
                 <p className="text-default-300 text-sm mb-6 leading-relaxed">{tool.description}</p>
                 <a className={`${tool.color} group relative inline-flex items-center gap-2 text-sm font-medium`}>
                   <span className="bg-current absolute -bottom-0 h-px w-7/12 rounded opacity-50 transition-all duration-500 group-hover:w-full" />
-                  Get started <LuArrowRightFromLine size={14} />
+                  {tool.cta} <LuArrowRightFromLine size={14} />
                 </a>
               </div>
             </div>
