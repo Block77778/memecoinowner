@@ -29,7 +29,7 @@ export const Footer: FC = () => {
               MemecoinOwner
             </h5>
             <p className="text-default-300">
-              MemecoinOwner is your all-in-one platform to launch, manage, and scale memecoins. 
+              MemecoinOwner is your all-in-one platform to launch, manage, and scale memecoins.
               Built for creators who want fast, secure, and powerful crypto tools.
             </p>
           </div>
@@ -39,10 +39,7 @@ export const Footer: FC = () => {
             <h5 className="text-white text-xl font-semibold mb-4">
               Contact
             </h5>
-            <p className="text-default-300">support@memecoinowner.com</p>
-            <p className="text-default-400 mt-2">
-              Created by Crypto Taq (Fiverr)
-            </p>
+            <p className="text-default-300">coinownermeme@gmail.com</p>
           </div>
 
           {/* NEWSLETTER */}
@@ -85,7 +82,7 @@ export const Footer: FC = () => {
       {/* FINAL FOOTER */}
       <div className="border-t border-white/10 py-6 text-center">
         <p className="text-default-400 text-sm">
-          © 2026 MemecoinOwner. Created by Crypto Taq on Fiverr
+          © 2026 MemecoinOwner. All rights reserved.
         </p>
       </div>
     </footer>
