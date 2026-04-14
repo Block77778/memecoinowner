@@ -14,17 +14,19 @@ export const FeatureView: FC<FeatureViewProps> = ({
 }) => {
   const feature = [
     {
-      name: "Token Generator",
+      name: "Create Token",
       icon: <MdGeneratingTokens size={28} />,
       description:
-        "Launch your own Solana token in minutes. Set your name, symbol, supply, and decimals — then deploy straight to the Solana blockchain with one click.",
+        "Launch your own Solana token in 60 seconds. Choose a name, symbol, supply amount — then create in a single click. Your token will be instantly ready for use.",
+      cta: "Create Now",
       function: setOpenCreateModal,
     },
     {
-      name: "Update Metadata",
+      name: "Update Coin",
       icon: <RxTokens size={28} />,
       description:
-        "Update your token's metadata on-chain — change the name, symbol, URI, or image anytime. Keep your token's identity fresh and professional.",
+        "Update your coin with us — such as the name, symbol, and other details as needed, anytime, free.",
+      cta: "Update Now",
       function: setOpenTokenMetaData,
     },
   ];
@@ -34,11 +36,11 @@ export const FeatureView: FC<FeatureViewProps> = ({
       <div className="container">
         <div className="mb-10 text-center">
           <h2 className="mb-4 text-3xl font-medium capitalize text-white">
-            Everything You Need to Launch on Solana
+            Everything You Need To Launch a Coin
           </h2>
           <p className="text-default-200 text-sm font-medium">
-            MemecoinOwner gives you the tools to create, deploy, and manage <br />
-            your Solana token — all without writing a single line of code.
+            MemeCoinOwner is an online all in one tool to create<br />
+            and manage your own crypto coin.
           </p>
         </div>
 
@@ -62,7 +64,7 @@ export const FeatureView: FC<FeatureViewProps> = ({
                   onClick={() => list.function(true)}
                   className="hover:bg-primary-hover inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-white/10 px-6 py-2 text-white transition-all duration-300"
                 >
-                  Launch Tool <LuArrowRightFromLine />
+                  {list.cta} <LuArrowRightFromLine />
                 </a>
               </div>
             </div>
