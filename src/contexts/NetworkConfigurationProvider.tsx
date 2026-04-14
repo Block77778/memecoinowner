@@ -1,4 +1,3 @@
-import { useLocalStorage } from "@solana/wallet-adapter-react";
 import { createContext, FC, ReactNode, useContext } from "react";
 
 export interface NetworkConfigurationState {
@@ -16,10 +15,9 @@ export function useNetworkConfiguration(): NetworkConfigurationState {
 export const NetworkConfigurationProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [networkConfiguration, setNetworkConfiguration] = useLocalStorage(
-    "network",
-    "devnet"
-  );
+  // Always mainnet — no user switching
+  const networkConfiguration = "mainnet-beta";
+  const setNetworkConfiguration = (_: string) => {};
 
   return (
     <NetworkConfigurationContext.Provider
