@@ -19,7 +19,7 @@ export const ToolView: FC<ToolViewProps> = ({
       icon: <MdGeneratingTokens size={22} />,
       color: "text-primary",
       bg: "bg-primary/10",
-      cta: "Create Now",
+      cta: "Create Coin",
       function: setOpenCreateModal,
     },
     {
