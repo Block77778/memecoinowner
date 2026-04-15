@@ -18,7 +18,7 @@ export const FeatureView: FC<FeatureViewProps> = ({
       icon: <MdGeneratingTokens size={28} />,
       description:
         "Launch your own Solana token in 60 seconds. Choose a name, symbol, supply amount — then create in a single click. Your token will be instantly ready for use.",
-      cta: "Create Now",
+      cta: "Create Coin",
       function: setOpenCreateModal,
     },
     {
