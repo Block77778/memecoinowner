@@ -37,7 +37,7 @@ export const HomeView: FC<HomeViewProps> = ({ setOpenCreateModal }) => {
                           <MdGeneratingTokens />
                         </i>
                       </span>
-                      Create
+                      Create Coin
                     </a>
                     <a className="mt-8">
                       <WalletMultiButton />
