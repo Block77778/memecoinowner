@@ -299,7 +299,7 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
                       Create Your Coin — Step 1 of 2
                     </h4>
                     <p className="text-default-300 mb-8 max-w-sm">
-                      Fill in your coin details below. You'll pay 1 SOL on the next step.
+                      Fill in your coin details below.
                     </p>
 
                     <div className="text-start">
@@ -341,7 +341,7 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
                           className="bg-primary-600/90 hover:bg-primary-600 group mt-5 inline-flex w-full items-center justify-center rounded-lg px-6 py-2 text-white backdrop-blur-2xl transition-all duration-500"
                           type="button"
                         >
-                          <span className="fw-bold">Next: Pay &amp; Create →</span>
+                          <span className="fw-bold">Create Now →</span>
                         </button>
                       </div>
                     </div>
