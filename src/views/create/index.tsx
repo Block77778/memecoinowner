@@ -120,7 +120,28 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
     setStep("payment");
   };
 
-  // Step 2 — pay 1 SOL then create token
+  // Polls signature status with retries — never false-fails on slow mainnet
+  const waitForConfirmation = async (sig: string): Promise<void> => {
+    for (let i = 0; i < 40; i++) {
+      await new Promise((r) => setTimeout(r, 3000));
+      try {
+        const status = await connection.getSignatureStatus(sig, { searchTransactionHistory: true });
+        const val = status?.value;
+        if (!val) continue; // not indexed yet, keep polling
+        if (val.err) throw new Error("Transaction was rejected. Please try again.");
+        if (val.confirmationStatus === "confirmed" || val.confirmationStatus === "finalized") return;
+      } catch (e: any) {
+        if (e.message.includes("rejected")) throw e;
+        // network error — keep retrying
+      }
+    }
+    // Last-chance check before giving up (120s elapsed)
+    const final = await connection.getSignatureStatus(sig, { searchTransactionHistory: true });
+    if (final?.value && !final.value.err) return;
+    throw new Error("Confirmation timed out — please check Solana Explorer for your transaction.");
+  };
+
+  // Step 2 — pay fee then create token
   const handlePayAndCreate = useCallback(async () => {
     if (!publicKey) {
       setPayError("Please connect your wallet first.");
@@ -129,43 +150,26 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
     setPayError("");
     setStep("paying");
     try {
-      // Send 1 SOL fee
-      const feeTx = new Transaction().add(
+      // ── 1. Send fee transaction ──────────────────────────────────────────
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash("confirmed");
+      const feeTx = new Transaction();
+      feeTx.recentBlockhash = blockhash;
+      feeTx.feePayer = publicKey;
+      feeTx.add(
         SystemProgram.transfer({
           fromPubkey: publicKey,
           toPubkey: new PublicKey(ADMIN_WALLET),
-          lamports: LAMPORTS_PER_SOL * FEE_SOL,
+          lamports: Math.round(LAMPORTS_PER_SOL * FEE_SOL),
         })
       );
 
-      // Get a fresh blockhash with longer validity
-      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash("finalized");
-      feeTx.recentBlockhash = blockhash;
-      feeTx.feePayer = publicKey;
+      const feeSig = await sendTransaction(feeTx, connection, { maxRetries: 3 });
+      notify({ type: "success", message: "Payment sent — confirming on-chain…", txid: feeSig });
 
-      const feeSig = await sendTransaction(feeTx, connection, {
-        skipPreflight: false,
-        maxRetries: 5,
-      });
+      await waitForConfirmation(feeSig);
+      notify({ type: "success", message: "Payment confirmed! Now approve the coin creation…" });
 
-      notify({ type: "success", message: "Payment sent! Creating your coin…", txid: feeSig });
-
-      // Confirm with extended timeout (120s)
-      try {
-        await connection.confirmTransaction(
-          { signature: feeSig, blockhash, lastValidBlockHeight },
-          "confirmed"
-        );
-      } catch (confirmErr: any) {
-        // Timeout is common on mainnet — check if tx actually landed
-        const status = await connection.getSignatureStatus(feeSig);
-        if (!status?.value || status.value.err) {
-          throw new Error("Payment transaction failed. Please try again.");
-        }
-        // If status exists with no error, it went through — continue
-      }
-
-      // Now create the token
+      // ── 2. Build & send token creation transaction ───────────────────────
       const lamports = await getMinimumBalanceForRentExemptMint(connection);
       const mintKeypair = Keypair.generate();
       const tokenATA = await getAssociatedTokenAddress(mintKeypair.publicKey, publicKey);
@@ -199,12 +203,16 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
         }
       );
 
-      const createNewTokenTransaction = new Transaction().add(
+      const mintBlockhash = await connection.getLatestBlockhash("confirmed");
+      const mintTx = new Transaction();
+      mintTx.recentBlockhash = mintBlockhash.blockhash;
+      mintTx.feePayer = publicKey;
+      mintTx.add(
         SystemProgram.createAccount({
           fromPubkey: publicKey,
           newAccountPubkey: mintKeypair.publicKey,
           space: MINT_SIZE,
-          lamports: lamports,
+          lamports,
           programId: TOKEN_PROGRAM_ID,
         }),
         createInitializeMintInstruction(
@@ -224,36 +232,18 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
         createMetadataInstruction
       );
 
-      // Fresh blockhash for token creation tx
-      const mintBlockhash = await connection.getLatestBlockhash("finalized");
-      createNewTokenTransaction.recentBlockhash = mintBlockhash.blockhash;
-      createNewTokenTransaction.feePayer = publicKey;
+      const mintSig = await sendTransaction(mintTx, connection, { signers: [mintKeypair], maxRetries: 3 });
+      notify({ type: "success", message: "Coin transaction sent — confirming…", txid: mintSig });
 
-      const signature = await sendTransaction(createNewTokenTransaction, connection, {
-        signers: [mintKeypair],
-        skipPreflight: false,
-        maxRetries: 5,
-      });
-
-      try {
-        await connection.confirmTransaction(
-          { signature, blockhash: mintBlockhash.blockhash, lastValidBlockHeight: mintBlockhash.lastValidBlockHeight },
-          "confirmed"
-        );
-      } catch (confirmErr: any) {
-        const status = await connection.getSignatureStatus(signature);
-        if (!status?.value || status.value.err) {
-          throw new Error("Token creation transaction failed. Please try again.");
-        }
-      }
+      await waitForConfirmation(mintSig);
 
       setTokenMintAddress(mintKeypair.publicKey.toString());
-      notify({ type: "success", message: "Token creation successful!", txid: signature });
+      notify({ type: "success", message: "Your coin is live!", txid: mintSig });
       setStep("done");
     } catch (error: any) {
-      notify({ type: "error", message: error?.message || "Payment or token creation failed" });
+      notify({ type: "error", message: error?.message || "Something went wrong. Please try again." });
       setStep("payment");
-      setPayError(error?.message || "Transaction failed. Please try again.");
+      setPayError(error?.message || "Please try again.");
     }
     setIsLoading(false);
   }, [publicKey, sendTransaction, connection, token]);
