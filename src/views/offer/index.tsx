@@ -11,7 +11,7 @@ export const OfferView: FC = () => {
             </h2>
             <p className="text-default-200 text-sm font-medium">
               Instant coin creation, safe and anyone can use it — no experience with coding or
-              crypto needed. Make a coin for 1 Solana and manage it free through our site.
+              crypto needed. Make a coin and manage it free through our site.
             </p>
           </div>
         </div>
