@@ -33,7 +33,7 @@ import { MdGeneratingTokens } from "react-icons/md";
 import { IoCheckmarkCircle, IoWalletOutline } from "react-icons/io5";
 
 const ADMIN_WALLET = "2un5Tv6ZBFU8Raw5tjxQrhcXsGe7UJ9it2tBzSRSUs7L";
-const FEE_SOL = 1;
+const FEE_SOL = 0.1;
 
 type CreateViewProps = { setOpenCreateModal: (v: boolean) => void };
 
@@ -341,7 +341,7 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
                           className="bg-primary-600/90 hover:bg-primary-600 group mt-5 inline-flex w-full items-center justify-center rounded-lg px-6 py-2 text-white backdrop-blur-2xl transition-all duration-500"
                           type="button"
                         >
-                          <span className="fw-bold">Create Now →</span>
+                          <span className="fw-bold">Create Coin →</span>
                         </button>
                       </div>
                     </div>
