@@ -38,7 +38,7 @@ export const ToolView: FC<ToolViewProps> = ({
       <div className="container">
         <div className="mb-10 text-center">
           <h2 className="mb-4 text-3xl font-medium capitalize text-white">
-            Easy. Create or Update your Coin.
+            Create or Update your Coin.
           </h2>
           <p className="text-default-200 text-sm font-medium">
             Create a new coin or update an existing coin.<br />
