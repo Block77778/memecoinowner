@@ -1,11 +1,5 @@
 import { FC } from "react";
 import { useForm } from "@formspree/react";
-import {
-  TiSocialFacebook,
-  TiSocialLinkedin,
-  TiSocialTwitter,
-  TiSocialYoutube,
-} from "react-icons/ti";
 
 export const Footer: FC = () => {
   const [state, handleSubmit] = useForm("mzbnzpqr");
@@ -62,7 +56,10 @@ export const Footer: FC = () => {
                   Subscribe
                 </button>
               </form>
+            </div>
+          </div>
 
+        </div>
       </div>
 
       {/* FINAL FOOTER */}
