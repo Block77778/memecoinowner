@@ -63,14 +63,6 @@ export const Footer: FC = () => {
                 </button>
               </form>
 
-              <div className="mt-6">
-                <h6 className="text-white mb-2">Follow Us</h6>
-                <div className="flex gap-3">
-                  {[<TiSocialFacebook />, <TiSocialLinkedin />, <TiSocialTwitter />, <TiSocialYoutube />].map((icon, i) => (
-                    <div key={i} className="text-white text-xl">
-                      {icon}
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>
