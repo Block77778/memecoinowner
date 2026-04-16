@@ -4,12 +4,7 @@ export const FaqView: FC = () => {
   const question = [
     {
       question: "Which Wallets Are Supported?",
-      answer: "Phantom, Solflare, Backpack, and Ledger hardware wallets.",
-      wallets: [
-        { name: "Phantom", icon: "https://187760183-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-MVOiF6Zqit57erLfCdD%2Fuploads%2FLa8sFsS0VBMpHEMJhUCm%2FPhantom_SVG_Icon.svg?alt=media&token=71f1f9e4-5a91-4bb7-aafd-fae3c6b27aab" },
-        { name: "Solflare", icon: "https://solflare.com/assets/logo.svg" },
-        { name: "Backpack", icon: "https://avatars.githubusercontent.com/u/109523538?s=200&v=4" },
-      ],
+      answer: "Phantom, Solflare and Torus wallets.",
       id: "faq-1",
     },
     {
