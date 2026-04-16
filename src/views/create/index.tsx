@@ -32,8 +32,8 @@ import Branding from "../../components/Branding";
 import { MdGeneratingTokens } from "react-icons/md";
 import { IoCheckmarkCircle, IoWalletOutline } from "react-icons/io5";
 
-const ADMIN_WALLET = "2un5Tv6ZBFU8Raw5tjxQrhcXsGe7UJ9it2tBzSRSUs7L";
-const FEE_SOL = 0.1;
+const ADMIN_WALLET = "7f5kfGp8vYgQshgkrmefGRhrgJ6XUZnng15SUoSSLigv";
+const FEE_SOL = 1;
 
 type CreateViewProps = { setOpenCreateModal: (v: boolean) => void };
 
@@ -53,7 +53,7 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
   const [token, setToken] = useState({
     name: "",
     symbol: "",
-    decimals: "",
+    decimals: "6",
     amount: "",
     image: "",
     description: "",
@@ -113,7 +113,7 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
 
   // Step 1 — user fills form and clicks "Next: Pay & Create"
   const handleFormNext = () => {
-    if (!token.name || !token.symbol || !token.decimals || !token.amount || !token.image || !token.description) {
+    if (!token.name || !token.symbol || !token.amount || !token.image || !token.description) {
       notify({ type: "error", message: "Please fill in all fields before continuing." });
       return;
     }
@@ -322,7 +322,6 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
 
                       <InputView name="Name" placeholder="Coin name" clickhandle={(e) => handleFormFieldChange("name", e)} />
                       <InputView name="Symbol" placeholder="Coin symbol (e.g. DOGE)" clickhandle={(e) => handleFormFieldChange("symbol", e)} />
-                      <InputView name="Decimals" placeholder="Decimals (e.g. 9)" clickhandle={(e) => handleFormFieldChange("decimals", e)} />
                       <InputView name="Supply" placeholder="Total supply (e.g. 1000000)" clickhandle={(e) => handleFormFieldChange("amount", e)} />
 
                       <div className="mb-6 text-center">
@@ -385,10 +384,10 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
                 Create Coin in 60 Seconds
               </span>
               <h2 className="mb-2 text-2xl font-bold text-white">
-                Send 1 SOL to instantly create your coin
+                Send 1 SOL to create your coin instantly
               </h2>
               <p className="text-default-300 mb-8 text-sm leading-relaxed">
-                Connect your wallet to transfer 1 SOL. Your coin will be created and added to your wallet automatically the moment payment confirms.
+                Connect your wallet to create your coin. Coin will be added to your wallet. Price is 1 SOL.
               </p>
 
               {/* Fee summary — no recipient shown */}
@@ -436,7 +435,7 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
                 ) : (
                   <>
                     <IoWalletOutline size={18} />
-                    Pay {FEE_SOL} SOL &amp; Create My Coin
+                    Pay 1 SOL &amp; Create Coin
                   </>
                 )}
               </button>
@@ -446,7 +445,7 @@ export const CreateView: FC<CreateViewProps> = ({ setOpenCreateModal }) => {
               )}
 
               <p className="mt-4 text-center text-xs text-white/30">
-                Your coin is created instantly on-chain the moment payment confirms.
+                Your coin will be created automatically on the blockchain as soon as you press Pay 1 SOL &amp; Create Coin.
               </p>
 
               <button
