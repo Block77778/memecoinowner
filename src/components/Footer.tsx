@@ -63,12 +63,6 @@ export const Footer: FC = () => {
                 </button>
               </form>
 
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
       </div>
 
       {/* FINAL FOOTER */}
