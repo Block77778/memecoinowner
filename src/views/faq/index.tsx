@@ -5,29 +5,38 @@ export const FaqView: FC = () => {
     {
       question: "Which Wallets Are Supported?",
       answer: "Phantom, Solflare, Backpack, and Ledger hardware wallets.",
+      wallets: [
+        { name: "Phantom", icon: "https://187760183-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-MVOiF6Zqit57erLfCdD%2Fuploads%2FLa8sFsS0VBMpHEMJhUCm%2FPhantom_SVG_Icon.svg?alt=media&token=71f1f9e4-5a91-4bb7-aafd-fae3c6b27aab" },
+        { name: "Solflare", icon: "https://solflare.com/assets/logo.svg" },
+        { name: "Backpack", icon: "https://avatars.githubusercontent.com/u/109523538?s=200&v=4" },
+      ],
       id: "faq-1",
     },
     {
       question: "What can I do with my coin?",
       answer:
         "You can allow others to buy it just like Bitcoin or Dogecoin. You would have your own coin on the blockchain which you can manage any way you like.",
+      wallets: undefined,
       id: "faq-2",
     },
     {
       question: "How do I contact you?",
       answer: "Message us under the contact tab or email coinownermeme@gmail.com",
+      wallets: undefined,
       id: "faq-3",
     },
     {
       question: "How long until I have my coin and can access it?",
       answer:
         "Immediately — it will be added to your wallet. The process is very quick and simple.",
+      wallets: undefined,
       id: "faq-4",
     },
     {
       question: "I have more questions.",
       answer:
         "Contact us anytime and we will answer any questions you have.",
+      wallets: undefined,
       id: "faq-5",
     },
   ];
@@ -72,6 +81,18 @@ export const FaqView: FC = () => {
                 >
                   <div className="px-6 pb-4 pt-0">
                     <p className="text-default-300 text-sm font-medium">{q.answer}</p>
+                    {q.wallets && (
+                      <div className="mt-4 flex items-center gap-4">
+                        {q.wallets.map((w) => (
+                          <div key={w.name} className="flex flex-col items-center gap-1">
+                            <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center overflow-hidden">
+                              <img src={w.icon} alt={w.name} className="h-7 w-7 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                            </div>
+                            <span className="text-xs text-white/50">{w.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
